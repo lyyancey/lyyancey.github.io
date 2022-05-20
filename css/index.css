@@ -669,7 +669,7 @@ kbd {
   font-size: 16px;
 }
 .content-wrap {
-  width: calc(100% - 330px);
+  width: calc(100% - 310px);
   float: left;
 }
 .content-wrap--noside {
@@ -2865,12 +2865,12 @@ html.nightmode {
   font-size: 0.9em;
   color: #999;
 }
-@media (min-width: 1138px) {
+@media (min-width: 1650px) {
   .header-nav-inner {
-    width: 1138px;
+    width: 1650px;
   }
   .main-inner {
-    width: 1138px;
+    width: 1650px;
   }
 }
 @media (min-width: 991.98px) {
