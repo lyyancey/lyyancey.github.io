@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-siteapp">
     <title>
         
-            Yancey
+            CentOS7 虚拟机安装Rabbitmq避坑指南
         
     </title>
     <link rel="shortcut icon" href="#"/>
@@ -38,158 +38,174 @@
 </head>
 <body>
     <a id="cover"></a>
-    <link type="text/css" rel="stylesheet" href="/css/index.css">
-<div id="count"></div>
-<div id="header" >
+    <link type="text/css" rel="stylesheet" href="/css/post.css">
+<div id="header" class="header">
     <div class="vertical">
         <div class="inner">
             
-                <h1 class="header-title">Yancey</h1>
-                <h2 class="header-description" id="hitokoto"></h2>
-                <h3 class="header-info" id="hitokotoAuthor"></h3>
+                <h1 class="header-subtitle">CentOS7 虚拟机安装Rabbitmq避坑指南</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2023-07-21
+                        </span>
+                        
+                            <span id="/posts/2365312446/" class="leancloud_visitors" data-flag-title="CentOS7 虚拟机安装Rabbitmq避坑指南">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/2365312446/"></span>
+                        </span>  
+                    </p>
+                    
+                        
+                            <span class="category-color">Linux</span>
+                        
+                            <span class="category-color">RabbitMq</span>
+                        
+                    
+                    
+                        
+                            <span class="tag-color">Linux</span>
+                        
+                    
+                </div>
             
         </div>
     </div>
     
-        <a class="scroll-down" href="javascript:;" target="_self" data-offset="-45">
-            <i class="scroll-down-icon iconfont icon-return"></i>
-        </a>
-    
 </div>
 <div id="container">
     
-        
-            <!-- 首页 -->
-            <div class="articles">
+        <!-- 文章页面 -->
+        <div id="article">
+            <div class="toc"></div>
+            <div class="article-body">
+                <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>首先介绍一下环境：</p>
+<ul>
+<li>VMWare Workstation 16</li>
+<li>Linux的发行版本为: CentOS Linux release 7.9.2009 (Core)</li>
+</ul>
+<p>在安装操作系统时，选择最小化安装，这样不会安装额外的软件，之后需要什么再安装就好了。在安装好操作系统之后，将虚拟机的网络设置为桥接模式，如果是笔记本的话记得将<code>复制物理网络连接状态</code>选项勾选上，这样虚拟机就可以和宿主机在同一个局域网内，这样就可以通过宿主机访问虚拟机了<sup>[<a target="_blank" rel="noopener" href="https://docs.vmware.com/cn/VMware-Workstation-Pro/17/com.vmware.ws.using.doc/GUID-826323AD-D014-475D-8909-DFA73B5A3A57.html">1</a>]</sup>。之后你需要安装一些必要的工具如<code>git</code>、<code>wget</code>等。</p>
+<h1 id="安装rabbitmq"><a class="markdownIt-Anchor" href="#安装rabbitmq"></a> 安装RabbitMq</h1>
+<p>在安装之前首先需要安装EPEL<sup>[<a target="_blank" rel="noopener" href="https://www.redhat.com/en/blog/whats-epel-and-how-do-i-use-it">2</a>]</sup>-release这个包，它包括了用于包签名和存储库信息的GPG密钥，以及用于安装EPEL存储库的软件包。在安装之前需要先更新一下系统，这样可以避免一些不必要的麻烦:</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br><span class="line">sudo yum -y update</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="安装erlang"><a class="markdownIt-Anchor" href="#安装erlang"></a> 安装Erlang</h2>
+<p>下载仓库条目信息:</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm</span><br></pre></td></tr></tbody></table></figure>
+<p>之后你需要条目信息添加到你的系统中:</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh erlang-solutions-2.0-1.noarch.rpm</span><br></pre></td></tr></tbody></table></figure>
+<p>参数<code>Uvh</code>表示我要升级该软件包并将该软件包的hash以及输出细节打印出来。</p>
+<p>安装erlang和依赖项:</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install erlang socat logrotate</span><br></pre></td></tr></tbody></table></figure>
+<p>如果你要安装指定版本的erlang，可以在<code>yum install</code>后面加上版本号，如<code>sudo yum -y install erlang-24.3.4.1-1.el7.x86_64</code>。</p>
+<h2 id="安装rabbitmq-server"><a class="markdownIt-Anchor" href="#安装rabbitmq-server"></a> 安装RabbitMq-server</h2>
+<p>下载RabbitMq的仓库条目信息:</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.35/rabbitmq-server-3.8.35-1.el8.noarch.rpm</span><br></pre></td></tr></tbody></table></figure>
+<p>这里安装的是3.8.35版本的RabbitMq，如果你要安装指定版本的RabbitMq，可以修改上面的链接。但是要注意Rabbitmq的版本要与erlang的版本对应<sup>[<a target="_blank" rel="noopener" href="https://www.rabbitmq.com/which-erlang.html">3</a>]</sup>。</p>
+<p>添加签名密钥：</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm --import sudo rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc</span><br></pre></td></tr></tbody></table></figure>
+<p>安装RabbitMq-server:</p>
+  <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh rabbitmq-server-3.8.35-1.el8.noarch.rpm</span><br></pre></td></tr></tbody></table></figure>
+<p>启动RabbitMq:</p>
+<pre><code><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start rabbitmq-server</span><br></pre></td></tr></tbody></table></figure>
+</code></pre>
+<p>设置系统在自动启动时启动RabbitMq:<br>
+</p><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> rabbitmq-server</span><br></pre></td></tr></tbody></table></figure><p></p>
+<h2 id="配置rabbitmq-可选"><a class="markdownIt-Anchor" href="#配置rabbitmq-可选"></a> 配置RabbitMq (可选)</h2>
+<p>创建Rabbitmq的配置文件<code>/etc/rabbitmq/rabbitmq.conf</code>：<br>
+下面关于安全ssl的部分在CentOS 7上不建议配置可能会出现问题,一开始我配置上下面的ssl选项时，Rabbitmq可以运行，但是关机再启动时就会发生错误，启动不起来，可能的原因是CentOS7不提供OpenSSL 1.1作为系统库所以不能使用Erlang 24<sup>[<a target="_blank" rel="noopener" href="https://docs.vmware.com/en/VMware-RabbitMQ/1.4/vmware-rabbitmq-oci/install-rpm.html">4</a>]</sup>。如果你是其他的发行版可以参考以下配置：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">listeners.ssl.default = 5671</span><br><span class="line"></span><br><span class="line">ssl_options.cacertfile = /path/to/cacertfile.pem</span><br><span class="line">ssl_options.certfile   = /path/to/certfile.pem</span><br><span class="line">ssl_options.keyfile    = /path/to/keyfile.pem</span><br><span class="line">ssl_options.verify     = verify_peer</span><br><span class="line">ssl_options.versions.1 = tlsv1.2</span><br><span class="line">ssl_options.versions.2 = tlsv1.1</span><br><span class="line">ssl_options.fail_if_no_peer_cert = false</span><br><span class="line"></span><br><span class="line">tcp_listen_options.backlog       = 128</span><br><span class="line">tcp_listen_options.nodelay       = true</span><br><span class="line">tcp_listen_options.exit_on_close = false</span><br><span class="line">tcp_listen_options.keepalive     = false</span><br><span class="line"></span><br><span class="line">heartbeat = 580</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="防火墙"><a class="markdownIt-Anchor" href="#防火墙"></a> 防火墙</h2>
+<p>如果你安装并运行了防火墙的话，需要进行以下配置：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=4369/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=25672/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=5671-5672/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=15672/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=61613-61614/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=1883/tcp</span><br><span class="line">sudo firewall-cmd --zone=public --permanent --add-port=8883/tcp</span><br></pre></td></tr></tbody></table></figure>
+<p>然后Reload防火墙：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="selinux"><a class="markdownIt-Anchor" href="#selinux"></a> SELinux</h2>
+<p>如果你开起了SELinux的话，需要进行以下配置：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo setsebool -P nis_enabled 1</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="rabbitmq-web管理界面"><a class="markdownIt-Anchor" href="#rabbitmq-web管理界面"></a> RabbitMq Web管理界面</h2>
+<p>启用RabbitMq的Web管理界面，需要先启用RabbitMq的管理插件：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></tbody></table></figure>
+<p>修改文件权限：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R rabbitmq:rabbitmq /var/lib/rabbitmq/</span><br></pre></td></tr></tbody></table></figure>
+<p>创建一个admin的用户：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl add_user admin password</span><br></pre></td></tr></tbody></table></figure>
+<p>最后两个参数<code>admin</code>是用户名，<code>password</code>是密码，你可以自己修改。<br>
+然后给这个用户分配管理员权限：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl set_user_tags admin administrator</span><br></pre></td></tr></tbody></table></figure>
+<p>给这个用户分配所有权限：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"</span><br></pre></td></tr></tbody></table></figure>
+<p>最后你就可以用这个账号通过Web端访问RabbitMq:</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip:15672</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="rabbitmq-web-管理端的ssl配置"><a class="markdownIt-Anchor" href="#rabbitmq-web-管理端的ssl配置"></a> RabbitMq Web 管理端的SSL配置</h2>
+<p>这一部分和上面一样，在CentOs7可能会出现问题。<br>
+在<code>/etc/rabbitmq/rabbitmq.conf</code>中添加以下配置：</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">management.listener.port = 15672</span><br><span class="line">management.listener.ssl  = true</span><br><span class="line"></span><br><span class="line">management.listener.ssl_opts.cacertfile = /path/to/cacertfile.pem</span><br><span class="line">management.listener.ssl_opts.certfile   = /path/to/certfile.pem</span><br><span class="line">management.listener.ssl_opts.keyfile    = /path/to/keyfile.pem</span><br></pre></td></tr></tbody></table></figure>
+<h1 id="结语"><a class="markdownIt-Anchor" href="#结语"></a> 结语</h1>
+<p>可能用docker会比较简单 😃</p>
+<p>但是配置方式可以参考一下。</p>
+
                 
-                    <div class="article">
-                        <div class="article-title">
-                            <a href="/posts/2365312446/">CentOS7 虚拟机安装Rabbitmq避坑指南</a>
-                            
-                        </div>
-                        <div class="article-abstract">
-                            
-                        </div>
-                        <div class="clear"></div>
-                        <div class="article-info">
-                            <span>
-                                <i class="iconfont icon-time"></i> 发表时间：2023-07-21
-                            </span>
-                            
-                                <span id="/posts/2365312446/" class="leancloud_visitors" data-flag-title="CentOS7 虚拟机安装Rabbitmq避坑指南">
-                                    <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
-                                </span>
-                            
-                            <span>
-                                <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/2365312446/"></span>
-                            </span>
-                        </div>
-                        <div class="clear"></div>     
+                <p class="end">__END__</p>
+            </div>
+            <div class="article-footer">
+                <div class="suffix-box">
+    <div class="suffix-box-left">
+        <img src="/image/sidebar/android-chrome-192x192.png" alt="Yancey">
+    </div>
+    <div class="suffix-box-right">
+        <span class="suffix-box-title">文章作者：</span>Yancey
+        <br>
+        <span class="suffix-box-title">文章出处：</span><a href="/posts/2365312446/" target="_blank">CentOS7 虚拟机安装Rabbitmq避坑指南</a>
+        <br>
+        <span class="suffix-box-title">作者签名：</span>Don't be afraid to choose a different path than others.
+        <br>
+        <span class="suffix-box-title">关于主题：</span><a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Live For Code</a>
+        <br>
+        <span class="suffix-box-title">版权声明：</span>文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+        <br>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+                
+                    <div class="category">
+                        分类：
+                        
+                            <a href="/categories/Linux/">Linux</a>
+                        
+                            <a href="/categories/RabbitMq/">RabbitMq</a>
+                        
                     </div>
                 
-                    <div class="article">
-                        <div class="article-title">
-                            <a href="/posts/1322687218/">动态规划学习笔记(一)</a>
-                            
-                        </div>
-                        <div class="article-abstract">
-                            
-                        </div>
-                        <div class="clear"></div>
-                        <div class="article-info">
-                            <span>
-                                <i class="iconfont icon-time"></i> 发表时间：2022-09-01
-                            </span>
-                            
-                                <span id="/posts/1322687218/" class="leancloud_visitors" data-flag-title="动态规划学习笔记(一)">
-                                    <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
-                                </span>
-                            
-                            <span>
-                                <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/1322687218/"></span>
-                            </span>
-                        </div>
-                        <div class="clear"></div>     
+                
+                    <div class="tag">
+                        标签：
+                        
+                            <a href="/tags/Linux/">Linux</a>
+                        
                     </div>
                 
-                    <div class="article">
-                        <div class="article-title">
-                            <a href="/posts/3706206380/">Linux 文件的排序、合并和分割</a>
-                            
-                        </div>
-                        <div class="article-abstract">
-                            
-                        </div>
-                        <div class="clear"></div>
-                        <div class="article-info">
-                            <span>
-                                <i class="iconfont icon-time"></i> 发表时间：2022-05-26
-                            </span>
-                            
-                                <span id="/posts/3706206380/" class="leancloud_visitors" data-flag-title="Linux 文件的排序、合并和分割">
-                                    <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
-                                </span>
-                            
-                            <span>
-                                <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/3706206380/"></span>
-                            </span>
-                        </div>
-                        <div class="clear"></div>     
-                    </div>
-                
-                    <div class="article">
-                        <div class="article-title">
-                            <a href="/posts/3950104678/">Linux 三剑客之sed</a>
-                            
-                        </div>
-                        <div class="article-abstract">
-                            
-                        </div>
-                        <div class="clear"></div>
-                        <div class="article-info">
-                            <span>
-                                <i class="iconfont icon-time"></i> 发表时间：2022-05-18
-                            </span>
-                            
-                                <span id="/posts/3950104678/" class="leancloud_visitors" data-flag-title="Linux 三剑客之sed">
-                                    <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
-                                </span>
-                            
-                            <span>
-                                <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/3950104678/"></span>
-                            </span>
-                        </div>
-                        <div class="clear"></div>     
-                    </div>
-                
-                    <div class="article">
-                        <div class="article-title">
-                            <a href="/posts/2297297103/">贝索斯的酷文化</a>
-                            
-                        </div>
-                        <div class="article-abstract">
-                            
-                        </div>
-                        <div class="clear"></div>
-                        <div class="article-info">
-                            <span>
-                                <i class="iconfont icon-time"></i> 发表时间：2022-05-16
-                            </span>
-                            
-                                <span id="/posts/2297297103/" class="leancloud_visitors" data-flag-title="贝索斯的酷文化">
-                                    <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
-                                </span>
-                            
-                            <span>
-                                <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/posts/2297297103/"></span>
-                            </span>
-                        </div>
-                        <div class="clear"></div>     
-                    </div>
-                
+                <div class="article-prev-next">
+                    
+                    
+                        <a href="/posts/1322687218/" class="next-prefix">» </a> 下一篇：    <a href="/posts/1322687218/" title="发布于 2022-09-01 03:17">动态规划学习笔记(一)</a>
+                    
+                </div>
             </div>
             
+    <div class="article-comments">
         
+            <div class="comments-title">
+                评论列表
+            </div>
+        
+        <div class="comments-content"></div>
+    </div>
+
+        </div>
     
 </div>
     <div id="footer"></div>
@@ -215,7 +231,7 @@
             <div class="menu-list">
                 <ul>
                     
-                        <li class=" active "><a href="/" class="" target="_self"><span class="iconfont icon-home-fill"></span>首页</a></li>
+                        <li class=""><a href="/" class="" target="_self"><span class="iconfont icon-home-fill"></span>首页</a></li>
                     
                         <li class=""><a href="/category" class="" target="_self"><span class="iconfont icon-folder-fill"></span>分类</a></li>
                     
