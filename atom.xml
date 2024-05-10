@@ -3,11 +3,11 @@
   <title>Yancey</title>
   
   
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="https://lyblogs.xyz/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
+  <link href="https://lyblogs.xyz/"/>
   <updated>2023-07-21T06:27:25.718Z</updated>
-  <id>http://example.com/</id>
+  <id>https://lyblogs.xyz/</id>
   
   <author>
     <name>Yancey</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>CentOS7 虚拟机安装Rabbitmq避坑指南</title>
-    <link href="http://example.com/posts/2365312446/"/>
-    <id>http://example.com/posts/2365312446/</id>
+    <link href="https://lyblogs.xyz/posts/2365312446/"/>
+    <id>https://lyblogs.xyz/posts/2365312446/</id>
     <published>2023-07-21T02:49:26.000Z</published>
     <updated>2023-07-21T06:27:25.718Z</updated>
     
@@ -30,19 +30,19 @@
     
     
     
-    <category term="Linux" scheme="http://example.com/categories/Linux/"/>
+    <category term="Linux" scheme="https://lyblogs.xyz/categories/Linux/"/>
     
-    <category term="RabbitMq" scheme="http://example.com/categories/RabbitMq/"/>
+    <category term="RabbitMq" scheme="https://lyblogs.xyz/categories/RabbitMq/"/>
     
     
-    <category term="Linux" scheme="http://example.com/tags/Linux/"/>
+    <category term="Linux" scheme="https://lyblogs.xyz/tags/Linux/"/>
     
   </entry>
   
   <entry>
     <title>动态规划学习笔记(一)</title>
-    <link href="http://example.com/posts/1322687218/"/>
-    <id>http://example.com/posts/1322687218/</id>
+    <link href="https://lyblogs.xyz/posts/1322687218/"/>
+    <id>https://lyblogs.xyz/posts/1322687218/</id>
     <published>2022-09-01T07:17:13.000Z</published>
     <updated>2022-09-22T03:11:32.256Z</updated>
     
@@ -53,19 +53,19 @@
     
     
     
-    <category term="算法" scheme="http://example.com/categories/%E7%AE%97%E6%B3%95/"/>
+    <category term="算法" scheme="https://lyblogs.xyz/categories/%E7%AE%97%E6%B3%95/"/>
     
-    <category term="动态规划" scheme="http://example.com/categories/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
+    <category term="动态规划" scheme="https://lyblogs.xyz/categories/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
     
     
-    <category term="算法" scheme="http://example.com/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="算法" scheme="https://lyblogs.xyz/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>Linux 文件的排序、合并和分割</title>
-    <link href="http://example.com/posts/3706206380/"/>
-    <id>http://example.com/posts/3706206380/</id>
+    <link href="https://lyblogs.xyz/posts/3706206380/"/>
+    <id>https://lyblogs.xyz/posts/3706206380/</id>
     <published>2022-05-26T08:43:15.000Z</published>
     <updated>2022-08-09T16:43:13.867Z</updated>
     
@@ -76,17 +76,17 @@
     
     
     
-    <category term="Linux" scheme="http://example.com/categories/Linux/"/>
+    <category term="Linux" scheme="https://lyblogs.xyz/categories/Linux/"/>
     
     
-    <category term="Linux" scheme="http://example.com/tags/Linux/"/>
+    <category term="Linux" scheme="https://lyblogs.xyz/tags/Linux/"/>
     
   </entry>
   
   <entry>
     <title>Linux 三剑客之sed</title>
-    <link href="http://example.com/posts/3950104678/"/>
-    <id>http://example.com/posts/3950104678/</id>
+    <link href="https://lyblogs.xyz/posts/3950104678/"/>
+    <id>https://lyblogs.xyz/posts/3950104678/</id>
     <published>2022-05-18T00:54:35.000Z</published>
     <updated>2022-08-09T16:43:13.859Z</updated>
     
@@ -97,17 +97,17 @@
     
     
     
-    <category term="Linux" scheme="http://example.com/categories/Linux/"/>
+    <category term="Linux" scheme="https://lyblogs.xyz/categories/Linux/"/>
     
     
-    <category term="Linux" scheme="http://example.com/tags/Linux/"/>
+    <category term="Linux" scheme="https://lyblogs.xyz/tags/Linux/"/>
     
   </entry>
   
   <entry>
     <title>贝索斯的酷文化</title>
-    <link href="http://example.com/posts/2297297103/"/>
-    <id>http://example.com/posts/2297297103/</id>
+    <link href="https://lyblogs.xyz/posts/2297297103/"/>
+    <id>https://lyblogs.xyz/posts/2297297103/</id>
     <published>2022-05-16T09:08:45.000Z</published>
     <updated>2024-05-09T09:55:52.506Z</updated>
     
@@ -118,12 +118,12 @@
     
     
     
-    <category term="杂谈" scheme="http://example.com/categories/%E6%9D%82%E8%B0%88/"/>
+    <category term="杂谈" scheme="https://lyblogs.xyz/categories/%E6%9D%82%E8%B0%88/"/>
     
-    <category term="闲聊" scheme="http://example.com/categories/%E9%97%B2%E8%81%8A/"/>
+    <category term="闲聊" scheme="https://lyblogs.xyz/categories/%E9%97%B2%E8%81%8A/"/>
     
     
-    <category term="闲聊" scheme="http://example.com/tags/%E9%97%B2%E8%81%8A/"/>
+    <category term="闲聊" scheme="https://lyblogs.xyz/tags/%E9%97%B2%E8%81%8A/"/>
     
   </entry>
   
